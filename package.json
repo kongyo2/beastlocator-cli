@@ -14,7 +14,9 @@
   },
   "main": "./dist/cli.js",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
@@ -36,8 +38,20 @@
     "beastlocator",
     "terminal"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "kongyo2",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kongyo2/beastlocator-cli.git"
+  },
+  "homepage": "https://github.com/kongyo2/beastlocator-cli#readme",
+  "bugs": {
+    "url": "https://github.com/kongyo2/beastlocator-cli/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "engines": {
     "node": ">=20"
   },
