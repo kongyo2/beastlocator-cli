@@ -16,6 +16,7 @@ export const DEFAULT_PERSISTED_STATE: PersistedState = Object.freeze({
 		distanceMaskButtonVisible: true,
 		manualDistanceMaskEnabled: false,
 		screenshotWarningEnabled: true,
+		textArrowFallbackEnabled: false,
 		arrivalSoundEnabled: false,
 		distance114514SoundEnabled: false,
 		distanceIntervalSoundEnabled: false,
