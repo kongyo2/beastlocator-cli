@@ -1,0 +1,59 @@
+{
+  "name": "@kongyo2/beastlocator-cli",
+  "version": "0.9.5-beta.0",
+  "description": "Interactive BeastLocator CLI migrated from the Android app",
+  "type": "module",
+  "bin": {
+    "beastlocator": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/cli.js",
+      "default": "./dist/cli.js"
+    }
+  },
+  "main": "./dist/cli.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist",
+    "dev": "tsx src/cli.tsx",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
+    "start": "node ./dist/cli.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "oxlint --silent",
+    "lint:strict": "oxlint --deny-warnings",
+    "check:file": "oxlint",
+    "check": "npm run typecheck && npm run lint",
+    "test": "vitest run",
+    "prepublishOnly": "npm run check && npm run test && npm run build"
+  },
+  "keywords": [
+    "cli",
+    "ink",
+    "react",
+    "beastlocator",
+    "terminal"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@inkjs/ui": "^2.0.0",
+    "ink": "^7.0.0",
+    "neverthrow": "^8.2.0",
+    "react": "^19.2.5",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "oxlint": "^1.60.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.4"
+  }
+}
