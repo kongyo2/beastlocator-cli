@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Spacer, Text, useApp, useInput, useWindowSize } from 'ink';
+import Image, { TerminalInfoProvider } from 'ink-picture';
 import {
 	Alert,
 	Badge,
@@ -16,6 +17,7 @@ import type { ResultAsync } from 'neverthrow';
 import type { BeastLocatorService } from '../application/index.js';
 import { APP_REVISION_ID, APP_VERSION_NAME, type AppError, type DomainEvent, type LocaleTag, type OperationResult } from '../contracts/index.js';
 import { OSS_CATALOG } from '../infra/index.js';
+import { getBeastArrowImageSource } from './beast-arrow.js';
 import { resolveDictionary } from './i18n.js';
 import { CountBadge, DetailRow, MetricStrip, Panel, formatCoordinates, formatDegrees, type AccentColor, uiTheme } from './layout.js';
 
@@ -101,6 +103,7 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 	const [operationResult, setOperationResult] = useState<OperationResult | null>(null);
 	const [status, setStatus] = useState<UiStatus | null>(null);
 	const [lastEvents, setLastEvents] = useState<DomainEvent[]>([]);
+	const [directionImageSrc, setDirectionImageSrc] = useState<string | null>(null);
 
 	const locale: LocaleTag = operationResult?.view.settings.locale ?? 'ja';
 	const i18n = useMemo(() => resolveDictionary(locale), [locale]);
@@ -147,6 +150,27 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 	const settingState = view?.settings ?? null;
 	const runtimeState = view?.runtime ?? null;
 	const navigation = view?.navigation ?? null;
+
+	useEffect(() => {
+		let isActive = true;
+
+		void (async () => {
+			try {
+				const nextSource = await getBeastArrowImageSource(navigation?.arrowRotationDegrees ?? null);
+				if (isActive) {
+					setDirectionImageSrc(nextSource);
+				}
+			} catch {
+				if (isActive) {
+					setDirectionImageSrc(null);
+				}
+			}
+		})();
+
+		return () => {
+			isActive = false;
+		};
+	}, [navigation?.arrowRotationDegrees]);
 
 	const boolText = (enabled: boolean): string => (enabled ? i18n.on : i18n.off);
 	const toggleBadge = (enabled: boolean, offColor: AccentColor = 'yellow'): React.JSX.Element => (
@@ -282,6 +306,54 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 		);
 	};
 
+	const renderDirectionHero = (): React.JSX.Element => {
+		if (!runtimeState || !navigation) {
+			return <Text color="gray">{i18n.waitingLocation}</Text>;
+		}
+
+		const headlineDistance =
+			runtimeState.currentLocation === null
+				? i18n.waitingLocation
+				: navigation.displayDistanceText;
+		const directionText = settingState?.manualDistanceMaskEnabled
+			? `${i18n.directionLabel}: --`
+			: `${i18n.directionLabel}: ${navigation.displayDirectionText}`;
+		const imageWidth = isWideLayout ? 28 : 22;
+
+		if (runtimeState.destinationAnswered) {
+			return (
+				<Box flexDirection="column" alignItems="center">
+					<Text bold color="green">
+						{i18n.arrivalTitle}
+					</Text>
+					<Box marginTop={1}>
+						<Text color="white">{runtimeState.arrivalDestinationName ?? i18n.arrivalNamePending}</Text>
+					</Box>
+				</Box>
+			);
+		}
+
+		return (
+			<Box flexDirection="column" alignItems="center">
+				{directionImageSrc ? (
+					<Image
+						alt={`${i18n.directionLabel}: ${navigation.displayDirectionText}`}
+						src={directionImageSrc}
+						width={imageWidth}
+					/>
+				) : (
+					<Text color="gray">{i18n.waitingLocation}</Text>
+				)}
+				<Box marginTop={1}>
+					<Text bold color="cyan">
+						{headlineDistance}
+					</Text>
+				</Box>
+				<Text color={settingState?.manualDistanceMaskEnabled ? 'gray' : 'blue'}>{directionText}</Text>
+			</Box>
+		);
+	};
+
 	const renderMainSummary = (): React.JSX.Element => {
 		if (!view || !runtimeState || !navigation) {
 			return (
@@ -291,28 +363,35 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 			);
 		}
 
-		const directionBadgeColor: AccentColor = navigation.displayDirectionText === '--' ? 'blue' : 'green';
+		const directionBadgeColor: AccentColor =
+			runtimeState.currentLocation === null || navigation.displayDirectionText === '--' ? 'blue' : 'green';
 
 		return (
-			<Panel accentColor="cyan" badge={<Badge color={directionBadgeColor}>{navigation.displayDirectionText}</Badge>} title={i18n.menuMain}>
+			<Panel
+				accentColor="cyan"
+				badge={
+					runtimeState.destinationAnswered ? (
+						<Badge color="green">{i18n.arrivalTitle}</Badge>
+					) : (
+						<Badge color={directionBadgeColor}>{navigation.displayDirectionText}</Badge>
+					)
+				}
+				title={i18n.menuMain}
+			>
 				{runtimeState.debugDistanceOverrideEnabled ? (
 					<Alert title="debug" variant="warning">
 						{i18n.locationBlockedByDebug}
 					</Alert>
 				) : null}
-				{runtimeState.destinationAnswered ? (
-					<Box marginTop={runtimeState.debugDistanceOverrideEnabled ? 1 : 0}>
-						<Alert title={i18n.arrivalTitle} variant="success">
-							{runtimeState.arrivalDestinationName ?? i18n.arrivalNamePending}
-						</Alert>
-					</Box>
-				) : null}
+				<Box marginTop={1}>
+					{renderDirectionHero()}
+				</Box>
 				<Box marginTop={1}>
 					<MetricStrip
 						isWide={isWideLayout}
 						items={[
 							{ label: i18n.distanceLabel, value: navigation.displayDistanceText, color: 'cyan' },
-							{ label: i18n.directionLabel, value: navigation.displayDirectionText, color: 'green' },
+							{ label: 'bearing', value: formatDegrees(navigation.displayBearingDegrees), color: 'green' },
 							{ label: i18n.headingLabel, value: formatDegrees(runtimeState.headingDegrees), color: 'yellow' }
 						]}
 					/>
@@ -1049,15 +1128,17 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 					: 'Arrow keys / Enter  Esc to return home';
 
 	return (
-		<ThemeProvider theme={uiTheme}>
-			<Box flexDirection="column">
-				{renderHeader()}
-				{renderStatus()}
-				{renderRoute()}
-				<Box marginTop={1}>
-					<Text color="gray">{keyboardHint}</Text>
+		<TerminalInfoProvider>
+			<ThemeProvider theme={uiTheme}>
+				<Box flexDirection="column">
+					{renderHeader()}
+					{renderStatus()}
+					{renderRoute()}
+					<Box marginTop={1}>
+						<Text color="gray">{keyboardHint}</Text>
+					</Box>
 				</Box>
-			</Box>
-		</ThemeProvider>
+			</ThemeProvider>
+		</TerminalInfoProvider>
 	);
 	};

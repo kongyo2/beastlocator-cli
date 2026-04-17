@@ -16,6 +16,11 @@ export const OSS_CATALOG: readonly OssEntry[] = Object.freeze([
 		url: 'https://github.com/vadimdemedes/ink'
 	},
 	{
+		title: 'ink-picture',
+		license: 'MIT',
+		url: 'https://github.com/endernoke/ink-picture'
+	},
+	{
 		title: '@inkjs/ui',
 		license: 'MIT',
 		url: 'https://github.com/vadimdemedes/ink-ui'

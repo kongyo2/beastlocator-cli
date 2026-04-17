@@ -19,6 +19,7 @@ type Dictionary = {
 	readonly arrivalTitle: string;
 	readonly arrivalNamePending: string;
 	readonly notAvailable: string;
+	readonly waitingLocation: string;
 	readonly locationInputLat: string;
 	readonly locationInputLng: string;
 	readonly headingInput: string;
@@ -91,6 +92,7 @@ const JA: Dictionary = {
 	arrivalTitle: 'こ↑こ↓',
 	arrivalNamePending: '正解位置を確認中...',
 	notAvailable: '--',
+	waitingLocation: '現在地を取得中...',
 	locationInputLat: '緯度を入力',
 	locationInputLng: '経度を入力',
 	headingInput: '方位(0-360)を入力',
@@ -164,6 +166,7 @@ const EN: Dictionary = {
 	arrivalTitle: 'Right here!',
 	arrivalNamePending: 'Resolving place name...',
 	notAvailable: '--',
+	waitingLocation: 'Waiting for location...',
 	locationInputLat: 'Enter latitude',
 	locationInputLng: 'Enter longitude',
 	headingInput: 'Enter heading (0-360)',
@@ -237,6 +240,7 @@ const ZH_CN: Dictionary = {
 	arrivalTitle: 'こ↑こ↓',
 	arrivalNamePending: '正在解析地点名称...',
 	notAvailable: '--',
+	waitingLocation: '正在获取当前位置...',
 	locationInputLat: '输入纬度',
 	locationInputLng: '输入经度',
 	headingInput: '输入方位(0-360)',
