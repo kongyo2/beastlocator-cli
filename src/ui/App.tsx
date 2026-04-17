@@ -385,7 +385,7 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 						{i18n.locationBlockedByDebug}
 					</Alert>
 				) : null}
-				<Box marginTop={1}>
+				<Box flexDirection="column" marginTop={1}>
 					{renderDirectionHero()}
 				</Box>
 				<Box marginTop={1}>
