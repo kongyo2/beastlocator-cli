@@ -40,23 +40,23 @@ const RIGHT_PAREN: readonly string[] = [
 	' ╚═╝  '
 ];
 
-// 首: 丷 (asymmetric — left ノ stroke 4 rows, right 丶 dot 2 rows)
-//    一 (full width, wider than 自)
-//    自 (box with top + 2 interior + bottom horizontal strokes)
+// 首: 丷 (top dots / strokes)
+//    一 (headline)
+//    自 (box with three inner horizontals)
 const KUBI: readonly string[] = [
-	'         ██       ██      ',
-	'        ██         ██     ',
-	'       ██                 ',
-	'      ██                  ',
+	'         ██     ██        ',
+	'        ██       ██       ',
+	'       ██         ██      ',
 	'                          ',
-	'██████████████████████████',
-	' ████████████████████████ ',
-	' ██                    ██ ',
-	' ████████████████████████ ',
-	' ██                    ██ ',
-	' ████████████████████████ ',
-	' ██                    ██ ',
-	' ████████████████████████ '
+	'    ██████████████████    ',
+	'      ██████████████      ',
+	'     ██            ██     ',
+	'     ████████████████     ',
+	'     ██            ██     ',
+	'     ████████████████     ',
+	'     ██            ██     ',
+	'     ████████████████     ',
+	'                          '
 ];
 
 const LOGO_LINES: readonly string[] = LEFT_PAREN.map(
