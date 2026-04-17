@@ -18,6 +18,7 @@ export type SettingsState = {
 	distanceMaskButtonVisible: boolean;
 	manualDistanceMaskEnabled: boolean;
 	screenshotWarningEnabled: boolean;
+	textArrowFallbackEnabled: boolean;
 	arrivalSoundEnabled: boolean;
 	distance114514SoundEnabled: boolean;
 	distanceIntervalSoundEnabled: boolean;

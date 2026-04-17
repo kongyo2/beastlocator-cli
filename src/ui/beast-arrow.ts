@@ -38,6 +38,17 @@ const getEmbeddedAsset = async (): Promise<string> => {
 
 export const beastImagePath = fileURLToPath(beastImageUrl);
 
+const TEXT_ARROW_GLYPHS: readonly string[] = ['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'];
+
+export const getBeastTextArrowGlyph = (rotationDegrees: number | null): string => {
+	if (rotationDegrees === null || !Number.isFinite(rotationDegrees)) {
+		return '·';
+	}
+	const normalized = normalizeRotationDegrees(rotationDegrees);
+	const index = Math.round(normalized / 45) % TEXT_ARROW_GLYPHS.length;
+	return TEXT_ARROW_GLYPHS[index] ?? '·';
+};
+
 export const getBeastArrowImageSource = async (rotationDegrees: number | null): Promise<string> => {
 	if (rotationDegrees === null || !Number.isFinite(rotationDegrees)) {
 		return beastImagePath;

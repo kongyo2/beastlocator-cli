@@ -60,6 +60,7 @@ type Dictionary = {
 	readonly settingsLegacyCompass: string;
 	readonly settingsDistanceMaskButton: string;
 	readonly settingsScreenshotWarning: string;
+	readonly settingsTextArrowFallback: string;
 	readonly experimentalArrivalSound: string;
 	readonly experimental114514Sound: string;
 	readonly experimentalIntervalSound: string;
@@ -134,6 +135,7 @@ const JA: Dictionary = {
 	settingsLegacyCompass: '従来コンパスモード',
 	settingsDistanceMaskButton: 'マスクボタン表示',
 	settingsScreenshotWarning: 'スクリーンショット警告',
+	settingsTextArrowFallback: '矢印フォールバック(画像無効)',
 	experimentalArrivalSound: '到達サウンド',
 	experimental114514Sound: '114.514kmサウンド',
 	experimentalIntervalSound: '距離間隔サウンド',
@@ -208,6 +210,7 @@ const EN: Dictionary = {
 	settingsLegacyCompass: 'Legacy compass mode',
 	settingsDistanceMaskButton: 'Distance mask button',
 	settingsScreenshotWarning: 'Screenshot warning',
+	settingsTextArrowFallback: 'Text arrow fallback (no image)',
 	experimentalArrivalSound: 'Arrival sound',
 	experimental114514Sound: '114.514km sound',
 	experimentalIntervalSound: 'Interval roar sound',
@@ -281,6 +284,7 @@ const ZH_CN: Dictionary = {
 	settingsLegacyCompass: '旧版指南针模式',
 	settingsDistanceMaskButton: '显示遮罩按钮',
 	settingsScreenshotWarning: '截图警告',
+	settingsTextArrowFallback: '文字箭头回退(禁用图片)',
 	experimentalArrivalSound: '到达音效',
 	experimental114514Sound: '114.514km音效',
 	experimentalIntervalSound: '间隔咆哮音效',

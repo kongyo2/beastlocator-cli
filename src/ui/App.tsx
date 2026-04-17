@@ -17,7 +17,7 @@ import type { ResultAsync } from 'neverthrow';
 import type { BeastLocatorService } from '../application/index.js';
 import { APP_REVISION_ID, APP_VERSION_NAME, type AppError, type DomainEvent, type LocaleTag, type OperationResult } from '../contracts/index.js';
 import { OSS_CATALOG } from '../infra/index.js';
-import { getBeastArrowImageSource } from './beast-arrow.js';
+import { getBeastArrowImageSource, getBeastTextArrowGlyph } from './beast-arrow.js';
 import { resolveDictionary } from './i18n.js';
 import { CountBadge, DetailRow, MetricStrip, Panel, formatCoordinates, formatDegrees, type AccentColor, uiTheme } from './layout.js';
 
@@ -151,7 +151,14 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 	const runtimeState = view?.runtime ?? null;
 	const navigation = view?.navigation ?? null;
 
+	const textArrowFallbackEnabled = settingState?.textArrowFallbackEnabled ?? false;
+
 	useEffect(() => {
+		if (textArrowFallbackEnabled) {
+			setDirectionImageSrc(null);
+			return;
+		}
+
 		let isActive = true;
 
 		void (async () => {
@@ -170,7 +177,7 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 		return () => {
 			isActive = false;
 		};
-	}, [navigation?.arrowRotationDegrees]);
+	}, [navigation?.arrowRotationDegrees, textArrowFallbackEnabled]);
 
 	const boolText = (enabled: boolean): string => (enabled ? i18n.on : i18n.off);
 	const toggleBadge = (enabled: boolean, offColor: AccentColor = 'yellow'): React.JSX.Element => (
@@ -334,9 +341,17 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 			);
 		}
 
+		const arrowGlyph = getBeastTextArrowGlyph(navigation.arrowRotationDegrees);
+
 		return (
 			<Box flexDirection="column" alignItems="center">
-				{directionImageSrc ? (
+				{textArrowFallbackEnabled ? (
+					<Box width={imageWidth} height={imageHeight} alignItems="center" justifyContent="center">
+						<Text bold color="cyan">
+							{arrowGlyph}
+						</Text>
+					</Box>
+				) : directionImageSrc ? (
 					<Box width={imageWidth} height={imageHeight}>
 						<Image
 							alt={`${i18n.directionLabel}: ${navigation.displayDirectionText}`}
@@ -547,6 +562,10 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 			runBooleanToggle('screenshotWarningEnabled');
 			return;
 		}
+		if (value === 'settings:text-arrow-fallback') {
+			runBooleanToggle('textArrowFallbackEnabled');
+			return;
+		}
 		setRoute({ kind: 'home' });
 	};
 
@@ -666,19 +685,20 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 		return (
 			renderResponsiveColumns(
 				[
-					<Panel accentColor="green" badge={<CountBadge color="green" value={8} />} title={i18n.menuSettings}>
-						<DetailRow label={i18n.settingsArrivalNotification} valueNode={toggleBadge(settingState.arrivalNotificationEnabled)} />
-						<DetailRow label={i18n.settingsLiveUpdate} valueNode={toggleBadge(settingState.liveUpdateEnabled)} />
-						<DetailRow label={i18n.settingsLiveUpdateStartDistance} valueText={`${settingState.liveUpdateStartDistanceMeters}m`} />
-						<DetailRow label={i18n.settingsBackgroundUpdate} valueNode={toggleBadge(settingState.backgroundLocationUpdateEnabled)} />
-						<DetailRow
-							label={i18n.settingsWidgetBearingMode}
-							valueText={settingState.widgetBearingMode === 'absolute' ? i18n.widgetModeAbsolute : i18n.widgetModeRelative}
-						/>
-						<DetailRow label={i18n.settingsLegacyCompass} valueNode={toggleBadge(settingState.legacyCompassModeEnabled)} />
-						<DetailRow label={i18n.settingsDistanceMaskButton} valueNode={toggleBadge(settingState.distanceMaskButtonVisible)} />
-						<DetailRow label={i18n.settingsScreenshotWarning} valueNode={toggleBadge(settingState.screenshotWarningEnabled)} />
-					</Panel>
+						<Panel accentColor="green" badge={<CountBadge color="green" value={9} />} title={i18n.menuSettings}>
+							<DetailRow label={i18n.settingsArrivalNotification} valueNode={toggleBadge(settingState.arrivalNotificationEnabled)} />
+							<DetailRow label={i18n.settingsLiveUpdate} valueNode={toggleBadge(settingState.liveUpdateEnabled)} />
+							<DetailRow label={i18n.settingsLiveUpdateStartDistance} valueText={`${settingState.liveUpdateStartDistanceMeters}m`} />
+							<DetailRow label={i18n.settingsBackgroundUpdate} valueNode={toggleBadge(settingState.backgroundLocationUpdateEnabled)} />
+							<DetailRow
+								label={i18n.settingsWidgetBearingMode}
+								valueText={settingState.widgetBearingMode === 'absolute' ? i18n.widgetModeAbsolute : i18n.widgetModeRelative}
+							/>
+							<DetailRow label={i18n.settingsLegacyCompass} valueNode={toggleBadge(settingState.legacyCompassModeEnabled)} />
+							<DetailRow label={i18n.settingsDistanceMaskButton} valueNode={toggleBadge(settingState.distanceMaskButtonVisible)} />
+							<DetailRow label={i18n.settingsScreenshotWarning} valueNode={toggleBadge(settingState.screenshotWarningEnabled)} />
+							<DetailRow label={i18n.settingsTextArrowFallback} valueNode={toggleBadge(settingState.textArrowFallbackEnabled)} />
+						</Panel>
 				],
 				[
 					renderActionPanel({
@@ -720,6 +740,10 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 							{
 								label: appendState(i18n.settingsScreenshotWarning, boolText(settingState.screenshotWarningEnabled)),
 								value: 'settings:screenshot-warning'
+							},
+							{
+								label: appendState(i18n.settingsTextArrowFallback, boolText(settingState.textArrowFallbackEnabled)),
+								value: 'settings:text-arrow-fallback'
 							},
 							{ label: i18n.back, value: 'settings:back' }
 						]

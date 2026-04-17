@@ -19,6 +19,7 @@ export const settingsSchema = z.object({
 	distanceMaskButtonVisible: z.boolean(),
 	manualDistanceMaskEnabled: z.boolean(),
 	screenshotWarningEnabled: z.boolean(),
+	textArrowFallbackEnabled: z.boolean(),
 	arrivalSoundEnabled: z.boolean(),
 	distance114514SoundEnabled: z.boolean(),
 	distanceIntervalSoundEnabled: z.boolean(),
