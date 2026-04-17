@@ -24,7 +24,6 @@ export type SettingsState = {
 	distanceIntervalSoundEnabled: boolean;
 	compassSmoothingEnabled: boolean;
 	distanceIntervalSoundMeters: number;
-	soundSettingsPromoted: boolean;
 	debugMenuVisible: boolean;
 	stableDebugMenuUnlockEnabled: boolean;
 	nonJapaneseLanguageEnabled: boolean;

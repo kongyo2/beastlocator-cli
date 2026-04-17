@@ -25,7 +25,6 @@ export const settingsSchema = z.object({
 	distanceIntervalSoundEnabled: z.boolean(),
 	compassSmoothingEnabled: z.boolean(),
 	distanceIntervalSoundMeters: z.number().int().min(100).max(5000),
-	soundSettingsPromoted: z.boolean().default(false),
 	debugMenuVisible: z.boolean(),
 	stableDebugMenuUnlockEnabled: z.boolean(),
 	nonJapaneseLanguageEnabled: z.boolean(),

@@ -16,5 +16,5 @@ export const DISTANCE_INTERVAL_SOUND_DEFAULT_METERS = 1000;
 export const DISTANCE_114514_METERS = 114_514;
 export const DISTANCE_MATCH_TOLERANCE_METERS = 80;
 
-export const APP_VERSION_NAME = '0.9.5-Beta';
+export const APP_VERSION_NAME = '1';
 export const APP_REVISION_ID = 'cli-migration';

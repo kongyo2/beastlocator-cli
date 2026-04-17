@@ -73,7 +73,7 @@ export class BeastLocatorService {
 	public initialize(): ResultAsync<OperationResult, AppError> {
 		return this.deps.storage.load().andThen((loaded) => {
 			const baseState = loaded ?? cloneDefaultPersistedState();
-			const normalized = this.normalizeSettingsPolicy(baseState);
+			const normalized = this.normalizeLocalePolicy(baseState);
 			this.state = normalized;
 			return this.finalize(normalized, [
 				{
@@ -430,20 +430,8 @@ export class BeastLocatorService {
 		]);
 	}
 
-	private normalizeSettingsPolicy(state: PersistedState): PersistedState {
+	private normalizeLocalePolicy(state: PersistedState): PersistedState {
 		const draft = cloneState(state);
-		if (!draft.settings.soundSettingsPromoted) {
-			const soundsLookUntouched =
-				!draft.settings.arrivalSoundEnabled &&
-				!draft.settings.distance114514SoundEnabled &&
-				!draft.settings.distanceIntervalSoundEnabled;
-			if (soundsLookUntouched) {
-				draft.settings.arrivalSoundEnabled = true;
-				draft.settings.distance114514SoundEnabled = true;
-				draft.settings.distanceIntervalSoundEnabled = true;
-			}
-			draft.settings.soundSettingsPromoted = true;
-		}
 		if (!draft.settings.nonJapaneseLanguageEnabled) {
 			draft.settings.locale = 'ja';
 		}
@@ -595,7 +583,7 @@ export class BeastLocatorService {
 		initialEvents: DomainEvent[],
 		resolveArrivalName = false
 	): ResultAsync<OperationResult, AppError> {
-		const normalized = this.normalizeSettingsPolicy(nextState);
+		const normalized = this.normalizeLocalePolicy(nextState);
 		const withOptionalResolution = resolveArrivalName
 			? this.resolveArrivalNameIfNeeded(normalized)
 			: okAsync(normalized);

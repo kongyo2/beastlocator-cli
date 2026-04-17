@@ -22,7 +22,6 @@ export const DEFAULT_PERSISTED_STATE: PersistedState = Object.freeze({
 		distanceIntervalSoundEnabled: true,
 		compassSmoothingEnabled: true,
 		distanceIntervalSoundMeters: DISTANCE_INTERVAL_SOUND_DEFAULT_METERS,
-		soundSettingsPromoted: true,
 		debugMenuVisible: false,
 		stableDebugMenuUnlockEnabled: false,
 		nonJapaneseLanguageEnabled: true,
