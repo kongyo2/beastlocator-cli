@@ -50,10 +50,12 @@ type Dictionary = {
 	readonly statusInitialized: string;
 	readonly statusArrivalReset: string;
 	readonly statusDistanceCleared: string;
+	readonly statusLocationUpdated: string;
 	readonly statusLocaleChanged: string;
 	readonly statusSoundPlaybackFailed: string;
 	readonly statusToggled: string;
 	readonly settingsArrivalNotification: string;
+	readonly settingsSystemLocation: string;
 	readonly settingsLiveUpdate: string;
 	readonly settingsLiveUpdateStartDistance: string;
 	readonly settingsBackgroundUpdate: string;
@@ -126,10 +128,12 @@ const JA: Dictionary = {
 	statusInitialized: '初期化しました',
 	statusArrivalReset: '到達状態をリセットしました',
 	statusDistanceCleared: '距離のデバッグ上書きを解除しました',
+	statusLocationUpdated: '位置情報を更新しました',
 	statusLocaleChanged: '言語設定を更新しました',
 	statusSoundPlaybackFailed: '音声の再生に失敗しました',
 	statusToggled: '設定を更新しました',
 	settingsArrivalNotification: '到達通知',
+	settingsSystemLocation: '実位置情報を使う',
 	settingsLiveUpdate: '進捗通知',
 	settingsLiveUpdateStartDistance: '進捗通知開始距離',
 	settingsBackgroundUpdate: 'バックグラウンド更新',
@@ -202,10 +206,12 @@ const EN: Dictionary = {
 	statusInitialized: 'Initialized',
 	statusArrivalReset: 'Arrival state has been reset',
 	statusDistanceCleared: 'Debug distance override cleared',
+	statusLocationUpdated: 'Location updated',
 	statusLocaleChanged: 'Locale updated',
 	statusSoundPlaybackFailed: 'Sound playback failed',
 	statusToggled: 'Setting updated',
 	settingsArrivalNotification: 'Arrival notification',
+	settingsSystemLocation: 'Use real location',
 	settingsLiveUpdate: 'Live progress update',
 	settingsLiveUpdateStartDistance: 'Live update start distance',
 	settingsBackgroundUpdate: 'Background update',
@@ -277,10 +283,12 @@ const ZH_CN: Dictionary = {
 	statusInitialized: '初始化完成',
 	statusArrivalReset: '已重置到达状态',
 	statusDistanceCleared: '已清除调试距离覆盖',
+	statusLocationUpdated: '已更新位置信息',
 	statusLocaleChanged: '已更新语言',
 	statusSoundPlaybackFailed: '音频播放失败',
 	statusToggled: '设置已更新',
 	settingsArrivalNotification: '到达通知',
+	settingsSystemLocation: '使用实际位置信息',
 	settingsLiveUpdate: '进度通知',
 	settingsLiveUpdateStartDistance: '进度通知起始距离',
 	settingsBackgroundUpdate: '后台更新',

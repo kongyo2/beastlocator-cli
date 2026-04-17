@@ -10,6 +10,7 @@ export const widgetBearingModeSchema = z.enum(['absolute', 'relative']);
 
 export const settingsSchema = z.object({
 	arrivalNotificationEnabled: z.boolean(),
+	systemLocationEnabled: z.boolean().default(true),
 	liveUpdateEnabled: z.boolean(),
 	liveUpdateStartDistanceMeters: z.number().int().min(200).max(5000),
 	backgroundLocationUpdateEnabled: z.boolean(),

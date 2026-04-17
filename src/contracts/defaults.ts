@@ -7,6 +7,7 @@ import type { PersistedState } from './models.js';
 export const DEFAULT_PERSISTED_STATE: PersistedState = Object.freeze({
 	settings: {
 		arrivalNotificationEnabled: true,
+		systemLocationEnabled: true,
 		liveUpdateEnabled: true,
 		liveUpdateStartDistanceMeters: LIVE_UPDATE_START_DEFAULT_METERS,
 		backgroundLocationUpdateEnabled: true,

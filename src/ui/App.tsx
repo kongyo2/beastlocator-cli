@@ -525,6 +525,10 @@ export const App = ({ service, soundPlayer }: AppProps): React.JSX.Element => {
 
 	const onMainAction = (value: string): void => {
 		if (value === 'main:update-location') {
+			if (settingState?.systemLocationEnabled) {
+				runOperation(service.refreshCurrentLocationFromProvider(), i18n.statusLocationUpdated);
+				return;
+			}
 			setRoute({ kind: 'location-lat' });
 			return;
 		}
@@ -561,6 +565,10 @@ export const App = ({ service, soundPlayer }: AppProps): React.JSX.Element => {
 		}
 		if (value === 'settings:arrival-notification') {
 			runBooleanToggle('arrivalNotificationEnabled');
+			return;
+		}
+		if (value === 'settings:system-location') {
+			runBooleanToggle('systemLocationEnabled');
 			return;
 		}
 		if (value === 'settings:live-update') {
@@ -719,8 +727,9 @@ export const App = ({ service, soundPlayer }: AppProps): React.JSX.Element => {
 		return (
 			renderResponsiveColumns(
 				[
-						<Panel accentColor="green" badge={<CountBadge color="green" value={13} />} title={i18n.menuSettings}>
+						<Panel accentColor="green" badge={<CountBadge color="green" value={14} />} title={i18n.menuSettings}>
 							<DetailRow label={i18n.settingsArrivalNotification} valueNode={toggleBadge(settingState.arrivalNotificationEnabled)} />
+							<DetailRow label={i18n.settingsSystemLocation} valueNode={toggleBadge(settingState.systemLocationEnabled)} />
 							<DetailRow label={i18n.settingsArrivalSound} valueNode={toggleBadge(settingState.arrivalSoundEnabled)} />
 							<DetailRow label={i18n.settingsLiveUpdate} valueNode={toggleBadge(settingState.liveUpdateEnabled)} />
 							<DetailRow label={i18n.settingsLiveUpdateStartDistance} valueText={`${settingState.liveUpdateStartDistanceMeters}m`} />
@@ -747,6 +756,10 @@ export const App = ({ service, soundPlayer }: AppProps): React.JSX.Element => {
 							{
 								label: appendState(i18n.settingsArrivalNotification, boolText(settingState.arrivalNotificationEnabled)),
 								value: 'settings:arrival-notification'
+							},
+							{
+								label: appendState(i18n.settingsSystemLocation, boolText(settingState.systemLocationEnabled)),
+								value: 'settings:system-location'
 							},
 							{
 								label: appendState(i18n.settingsArrivalSound, boolText(settingState.arrivalSoundEnabled)),

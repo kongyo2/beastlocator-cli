@@ -35,7 +35,7 @@ export class NominatimGeocoderPort implements GeocoderPort {
 			fetch(endpoint.toString(), {
 				headers: {
 					'accept-language': buildLanguageHeader(locale),
-					'user-agent': 'beastlocator-cli/0.9.5'
+					'user-agent': 'beastlocator-cli/1.0.0'
 				}
 			}),
 			(error) =>

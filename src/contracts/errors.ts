@@ -4,6 +4,7 @@ export type AppErrorCode =
 	| 'io_write_failed'
 	| 'json_parse_failed'
 	| 'geocode_failed'
+	| 'location_failed'
 	| 'state_not_initialized'
 	| 'invalid_operation';
 

@@ -9,6 +9,7 @@ export type Coordinates = {
 
 export type SettingsState = {
 	arrivalNotificationEnabled: boolean;
+	systemLocationEnabled: boolean;
 	liveUpdateEnabled: boolean;
 	liveUpdateStartDistanceMeters: number;
 	backgroundLocationUpdateEnabled: boolean;
@@ -90,6 +91,11 @@ export type AppViewModel = {
 	settings: SettingsState;
 	runtime: RuntimeState;
 	navigation: NavigationComputed;
+};
+
+export type LocationProviderResult = {
+	coordinates: Coordinates;
+	source: 'device' | 'network';
 };
 
 export type OperationResult = {

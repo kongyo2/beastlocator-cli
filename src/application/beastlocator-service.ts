@@ -35,12 +35,13 @@ import {
 	shouldMarkArrived,
 	smoothAngleDegrees
 } from '../domain/index.js';
-import type { ClockPort, GeocoderPort, StoragePort } from '../contracts/index.js';
+import type { ClockPort, GeocoderPort, LocationProviderPort, StoragePort } from '../contracts/index.js';
 
 type ServiceDependencies = {
 	readonly storage: StoragePort;
 	readonly geocoder: GeocoderPort;
 	readonly clock: ClockPort;
+	readonly locationProvider: LocationProviderPort;
 	readonly liveUpdateSupported: boolean;
 };
 
@@ -122,6 +123,16 @@ export class BeastLocatorService {
 		draft.runtime.currentLocation = validated.value;
 		const evaluated = this.evaluateRuntime(draft);
 		return this.finalize(evaluated.state, evaluated.events, evaluated.shouldResolveArrivalName);
+	}
+
+	public refreshCurrentLocationFromProvider(): ResultAsync<OperationResult, AppError> {
+		return this.deps.locationProvider.getCurrentLocation().andThen((result) => {
+			const taggedCoordinates: Coordinates = {
+				lat: result.coordinates.lat,
+				lng: result.coordinates.lng
+			};
+			return this.updateCurrentLocationFromSystem(taggedCoordinates);
+		});
 	}
 
 	public setHeadingDegrees(rawHeadingDegrees: number): ResultAsync<OperationResult, AppError> {

@@ -5,6 +5,7 @@ import { BeastLocatorService } from './application/index.js';
 import {
 	systemClockPort,
 	createFileStoragePort,
+	createSystemLocationProviderPort,
 	createNominatimGeocoderPort,
 	createSystemSoundPlayerPort
 } from './infra/index.js';
@@ -20,6 +21,7 @@ if (!isInteractiveTerminal) {
 		storage: createFileStoragePort(),
 		geocoder: createNominatimGeocoderPort(),
 		clock: systemClockPort,
+		locationProvider: createSystemLocationProviderPort(),
 		liveUpdateSupported: true
 	});
 	const soundPlayer = createSystemSoundPlayerPort();
