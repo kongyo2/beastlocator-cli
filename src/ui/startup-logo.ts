@@ -2,25 +2,54 @@
  * Startup banner showing "(首)" in an oh-my-logo block-style silhouette.
  *
  * `oh-my-logo` (https://github.com/shinshin86/oh-my-logo) renders text via
- * figlet / cfonts which only support the ASCII alphabet, so the CJK
- * character `首` is drawn here as a hand-crafted bitmap using full-block
- * characters in the same visual spirit as the oh-my-logo `--filled`
- * (block) mode.
+ * figlet / cfonts — neither supports the CJK character `首`. The logo is
+ * therefore composed manually: the parentheses borrow the cfonts `block`
+ * font's classic shadow characters (`██╗`, `╚═╝`, `║`, `═`), and `首`
+ * is drawn as a matching bitmap with 丷 + 一 + 自 visible.
  */
 
-const LOGO_LINES: readonly string[] = [
-	'  ██      ██    ██      ██  ',
-	' ██      ██      ██      ██ ',
-	'██                        ██',
-	'██     ██████████████     ██',
-	'██                        ██',
-	'██     ██████████████     ██',
-	'██     ██          ██     ██',
-	'██     ██████████████     ██',
-	'██     ██          ██     ██',
-	' ██    ██████████████    ██ ',
-	'  ██                    ██  '
+const LEFT_PAREN: readonly string[] = [
+	'  ██╗ ',
+	' ██╔╝ ',
+	' ██║  ',
+	' ██║  ',
+	' ██║  ',
+	' ██║  ',
+	' ██║  ',
+	' ██║  ',
+	' ╚██╗ ',
+	'  ╚═╝ '
 ];
+
+const RIGHT_PAREN: readonly string[] = [
+	' ██╗  ',
+	' ╚██╗ ',
+	'  ██║ ',
+	'  ██║ ',
+	'  ██║ ',
+	'  ██║ ',
+	'  ██║ ',
+	'  ██║ ',
+	' ██╔╝ ',
+	' ╚═╝  '
+];
+
+const KUBI: readonly string[] = [
+	'    ██        ██    ',
+	'   ████      ████   ',
+	'                    ',
+	' ██████████████████ ',
+	'                    ',
+	'████████████████████',
+	'██                ██',
+	'████████████████████',
+	'██                ██',
+	'████████████████████'
+];
+
+const LOGO_LINES: readonly string[] = LEFT_PAREN.map(
+	(left, i) => `${left}${KUBI[i] ?? ''}${RIGHT_PAREN[i] ?? ''}`
+);
 
 type Rgb = readonly [number, number, number];
 
