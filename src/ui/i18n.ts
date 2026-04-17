@@ -51,6 +51,7 @@ type Dictionary = {
 	readonly statusArrivalReset: string;
 	readonly statusDistanceCleared: string;
 	readonly statusLocaleChanged: string;
+	readonly statusSoundPlaybackFailed: string;
 	readonly statusToggled: string;
 	readonly settingsArrivalNotification: string;
 	readonly settingsLiveUpdate: string;
@@ -61,10 +62,10 @@ type Dictionary = {
 	readonly settingsDistanceMaskButton: string;
 	readonly settingsScreenshotWarning: string;
 	readonly settingsTextArrowFallback: string;
-	readonly experimentalArrivalSound: string;
-	readonly experimental114514Sound: string;
-	readonly experimentalIntervalSound: string;
-	readonly experimentalIntervalDistance: string;
+	readonly settingsArrivalSound: string;
+	readonly settings114514Sound: string;
+	readonly settingsIntervalSound: string;
+	readonly settingsIntervalDistance: string;
 	readonly experimentalCompassSmoothing: string;
 	readonly experimentalNonJapanese: string;
 	readonly experimentalLocale: string;
@@ -126,6 +127,7 @@ const JA: Dictionary = {
 	statusArrivalReset: '到達状態をリセットしました',
 	statusDistanceCleared: '距離のデバッグ上書きを解除しました',
 	statusLocaleChanged: '言語設定を更新しました',
+	statusSoundPlaybackFailed: '音声の再生に失敗しました',
 	statusToggled: '設定を更新しました',
 	settingsArrivalNotification: '到達通知',
 	settingsLiveUpdate: '進捗通知',
@@ -136,10 +138,10 @@ const JA: Dictionary = {
 	settingsDistanceMaskButton: 'マスクボタン表示',
 	settingsScreenshotWarning: 'スクリーンショット警告',
 	settingsTextArrowFallback: '矢印フォールバック(画像無効)',
-	experimentalArrivalSound: '到達サウンド',
-	experimental114514Sound: '114.514kmサウンド',
-	experimentalIntervalSound: '距離間隔サウンド',
-	experimentalIntervalDistance: '距離間隔サウンド間隔',
+	settingsArrivalSound: '到達サウンド',
+	settings114514Sound: '114.514kmサウンド',
+	settingsIntervalSound: '距離間隔サウンド',
+	settingsIntervalDistance: '距離間隔サウンド間隔',
 	experimentalCompassSmoothing: 'コンパス平滑化',
 	experimentalNonJapanese: '日本語以外を許可',
 	experimentalLocale: '言語',
@@ -201,6 +203,7 @@ const EN: Dictionary = {
 	statusArrivalReset: 'Arrival state has been reset',
 	statusDistanceCleared: 'Debug distance override cleared',
 	statusLocaleChanged: 'Locale updated',
+	statusSoundPlaybackFailed: 'Sound playback failed',
 	statusToggled: 'Setting updated',
 	settingsArrivalNotification: 'Arrival notification',
 	settingsLiveUpdate: 'Live progress update',
@@ -211,10 +214,10 @@ const EN: Dictionary = {
 	settingsDistanceMaskButton: 'Distance mask button',
 	settingsScreenshotWarning: 'Screenshot warning',
 	settingsTextArrowFallback: 'Text arrow fallback (no image)',
-	experimentalArrivalSound: 'Arrival sound',
-	experimental114514Sound: '114.514km sound',
-	experimentalIntervalSound: 'Interval roar sound',
-	experimentalIntervalDistance: 'Interval distance',
+	settingsArrivalSound: 'Arrival sound',
+	settings114514Sound: '114.514km sound',
+	settingsIntervalSound: 'Interval roar sound',
+	settingsIntervalDistance: 'Interval distance',
 	experimentalCompassSmoothing: 'Compass smoothing',
 	experimentalNonJapanese: 'Enable non-Japanese languages',
 	experimentalLocale: 'Language',
@@ -275,6 +278,7 @@ const ZH_CN: Dictionary = {
 	statusArrivalReset: '已重置到达状态',
 	statusDistanceCleared: '已清除调试距离覆盖',
 	statusLocaleChanged: '已更新语言',
+	statusSoundPlaybackFailed: '音频播放失败',
 	statusToggled: '设置已更新',
 	settingsArrivalNotification: '到达通知',
 	settingsLiveUpdate: '进度通知',
@@ -285,10 +289,10 @@ const ZH_CN: Dictionary = {
 	settingsDistanceMaskButton: '显示遮罩按钮',
 	settingsScreenshotWarning: '截图警告',
 	settingsTextArrowFallback: '文字箭头回退(禁用图片)',
-	experimentalArrivalSound: '到达音效',
-	experimental114514Sound: '114.514km音效',
-	experimentalIntervalSound: '间隔咆哮音效',
-	experimentalIntervalDistance: '间隔距离',
+	settingsArrivalSound: '到达音效',
+	settings114514Sound: '114.514km音效',
+	settingsIntervalSound: '间隔咆哮音效',
+	settingsIntervalDistance: '间隔距离',
 	experimentalCompassSmoothing: '指南针平滑',
 	experimentalNonJapanese: '允许日语以外语言',
 	experimentalLocale: '语言',

@@ -2,7 +2,12 @@
 
 import { render } from 'ink';
 import { BeastLocatorService } from './application/index.js';
-import { systemClockPort, createFileStoragePort, createNominatimGeocoderPort } from './infra/index.js';
+import {
+	systemClockPort,
+	createFileStoragePort,
+	createNominatimGeocoderPort,
+	createSystemSoundPlayerPort
+} from './infra/index.js';
 import { App } from './ui/index.js';
 
 const isInteractiveTerminal = Boolean(process.stdin.isTTY && process.stdout.isTTY);
@@ -17,6 +22,7 @@ if (!isInteractiveTerminal) {
 		clock: systemClockPort,
 		liveUpdateSupported: true
 	});
+	const soundPlayer = createSystemSoundPlayerPort();
 
-	render(<App service={service} />);
+	render(<App service={service} soundPlayer={soundPlayer} />);
 }

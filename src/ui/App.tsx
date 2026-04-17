@@ -15,7 +15,15 @@ import {
 } from '@inkjs/ui';
 import type { ResultAsync } from 'neverthrow';
 import type { BeastLocatorService } from '../application/index.js';
-import { APP_REVISION_ID, APP_VERSION_NAME, type AppError, type DomainEvent, type LocaleTag, type OperationResult } from '../contracts/index.js';
+import {
+	APP_REVISION_ID,
+	APP_VERSION_NAME,
+	type AppError,
+	type DomainEvent,
+	type LocaleTag,
+	type OperationResult,
+	type SoundPlayerPort
+} from '../contracts/index.js';
 import { OSS_CATALOG } from '../infra/index.js';
 import { getBeastArrowImageSource, getBeastTextArrowGlyph } from './beast-arrow.js';
 import { resolveDictionary } from './i18n.js';
@@ -23,6 +31,7 @@ import { CountBadge, DetailRow, MetricStrip, Panel, formatCoordinates, formatDeg
 
 type AppProps = {
 	readonly service: BeastLocatorService;
+	readonly soundPlayer: SoundPlayerPort;
 };
 
 type UiStatus = {
@@ -95,7 +104,7 @@ const latestStatusFromEvents = (
 	return mapEventToMessage(latest, defaultMessage);
 };
 
-export const App = ({ service }: AppProps): React.JSX.Element => {
+export const App = ({ service, soundPlayer }: AppProps): React.JSX.Element => {
 	const { exit } = useApp();
 	const { columns, rows } = useWindowSize();
 	const [route, setRoute] = useState<Route>({ kind: 'home' });
@@ -136,6 +145,31 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 		runOperation(service.initialize(), i18n.statusInitialized);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [service]);
+
+	useEffect(() => {
+		if (lastEvents.length === 0) {
+			return;
+		}
+
+		for (const event of lastEvents) {
+			if (event.type !== 'sound') {
+				continue;
+			}
+
+			void soundPlayer.play(event.sound).catch((error) => {
+				setStatus((current) => {
+					if (current?.variant === 'error') {
+						return current;
+					}
+
+					return {
+						variant: 'warning',
+						message: `${i18n.statusSoundPlaybackFailed}: ${error.message}`
+					};
+				});
+			});
+		}
+	}, [i18n.statusSoundPlaybackFailed, lastEvents, soundPlayer]);
 
 	useInput((input, key) => {
 		if (key.escape && route.kind !== 'home') {
@@ -210,7 +244,7 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 			case 'live-update-start-input':
 				return i18n.settingsLiveUpdateStartDistance;
 			case 'interval-distance-input':
-				return i18n.experimentalIntervalDistance;
+				return i18n.settingsIntervalDistance;
 			case 'locale-select':
 				return i18n.experimentalLocale;
 			case 'confirm-reset-arrival':
@@ -533,6 +567,22 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 			runBooleanToggle('liveUpdateEnabled');
 			return;
 		}
+		if (value === 'settings:arrival-sound') {
+			runBooleanToggle('arrivalSoundEnabled');
+			return;
+		}
+		if (value === 'settings:114514-sound') {
+			runBooleanToggle('distance114514SoundEnabled');
+			return;
+		}
+		if (value === 'settings:interval-sound') {
+			runBooleanToggle('distanceIntervalSoundEnabled');
+			return;
+		}
+		if (value === 'settings:interval-distance') {
+			setRoute({ kind: 'interval-distance-input' });
+			return;
+		}
 		if (value === 'settings:live-update-distance') {
 			setRoute({ kind: 'live-update-start-input' });
 			return;
@@ -571,22 +621,6 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 
 	const onExperimentalAction = (value: string): void => {
 		if (!settingState) {
-			return;
-		}
-		if (value === 'experimental:arrival-sound') {
-			runBooleanToggle('arrivalSoundEnabled');
-			return;
-		}
-		if (value === 'experimental:114514-sound') {
-			runBooleanToggle('distance114514SoundEnabled');
-			return;
-		}
-		if (value === 'experimental:interval-sound') {
-			runBooleanToggle('distanceIntervalSoundEnabled');
-			return;
-		}
-		if (value === 'experimental:interval-distance') {
-			setRoute({ kind: 'interval-distance-input' });
 			return;
 		}
 		if (value === 'experimental:compass-smoothing') {
@@ -685,10 +719,14 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 		return (
 			renderResponsiveColumns(
 				[
-						<Panel accentColor="green" badge={<CountBadge color="green" value={9} />} title={i18n.menuSettings}>
+						<Panel accentColor="green" badge={<CountBadge color="green" value={13} />} title={i18n.menuSettings}>
 							<DetailRow label={i18n.settingsArrivalNotification} valueNode={toggleBadge(settingState.arrivalNotificationEnabled)} />
+							<DetailRow label={i18n.settingsArrivalSound} valueNode={toggleBadge(settingState.arrivalSoundEnabled)} />
 							<DetailRow label={i18n.settingsLiveUpdate} valueNode={toggleBadge(settingState.liveUpdateEnabled)} />
 							<DetailRow label={i18n.settingsLiveUpdateStartDistance} valueText={`${settingState.liveUpdateStartDistanceMeters}m`} />
+							<DetailRow label={i18n.settings114514Sound} valueNode={toggleBadge(settingState.distance114514SoundEnabled)} />
+							<DetailRow label={i18n.settingsIntervalSound} valueNode={toggleBadge(settingState.distanceIntervalSoundEnabled)} />
+							<DetailRow label={i18n.settingsIntervalDistance} valueText={`${settingState.distanceIntervalSoundMeters}m`} />
 							<DetailRow label={i18n.settingsBackgroundUpdate} valueNode={toggleBadge(settingState.backgroundLocationUpdateEnabled)} />
 							<DetailRow
 								label={i18n.settingsWidgetBearingMode}
@@ -711,12 +749,28 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 								value: 'settings:arrival-notification'
 							},
 							{
+								label: appendState(i18n.settingsArrivalSound, boolText(settingState.arrivalSoundEnabled)),
+								value: 'settings:arrival-sound'
+							},
+							{
 								label: appendState(i18n.settingsLiveUpdate, boolText(settingState.liveUpdateEnabled)),
 								value: 'settings:live-update'
 							},
 							{
 								label: appendState(i18n.settingsLiveUpdateStartDistance, `${settingState.liveUpdateStartDistanceMeters}m`),
 								value: 'settings:live-update-distance'
+							},
+							{
+								label: appendState(i18n.settings114514Sound, boolText(settingState.distance114514SoundEnabled)),
+								value: 'settings:114514-sound'
+							},
+							{
+								label: appendState(i18n.settingsIntervalSound, boolText(settingState.distanceIntervalSoundEnabled)),
+								value: 'settings:interval-sound'
+							},
+							{
+								label: appendState(i18n.settingsIntervalDistance, `${settingState.distanceIntervalSoundMeters}m`),
+								value: 'settings:interval-distance'
 							},
 							{
 								label: appendState(i18n.settingsBackgroundUpdate, boolText(settingState.backgroundLocationUpdateEnabled)),
@@ -761,11 +815,7 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 		return (
 			renderResponsiveColumns(
 				[
-					<Panel accentColor="yellow" badge={<CountBadge color="yellow" value={7} />} title={i18n.menuExperimental}>
-						<DetailRow label={i18n.experimentalArrivalSound} valueNode={toggleBadge(settingState.arrivalSoundEnabled)} />
-						<DetailRow label={i18n.experimental114514Sound} valueNode={toggleBadge(settingState.distance114514SoundEnabled)} />
-						<DetailRow label={i18n.experimentalIntervalSound} valueNode={toggleBadge(settingState.distanceIntervalSoundEnabled)} />
-						<DetailRow label={i18n.experimentalIntervalDistance} valueText={`${settingState.distanceIntervalSoundMeters}m`} />
+					<Panel accentColor="yellow" badge={<CountBadge color="yellow" value={3} />} title={i18n.menuExperimental}>
 						<DetailRow label={i18n.experimentalCompassSmoothing} valueNode={toggleBadge(settingState.compassSmoothingEnabled)} />
 						<DetailRow label={i18n.experimentalNonJapanese} valueNode={toggleBadge(settingState.nonJapaneseLanguageEnabled)} />
 						<DetailRow label={i18n.experimentalLocale} valueText={settingState.locale} />
@@ -777,22 +827,6 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 						accentColor: 'yellow',
 						onChange: onExperimentalAction,
 						options: [
-							{
-								label: appendState(i18n.experimentalArrivalSound, boolText(settingState.arrivalSoundEnabled)),
-								value: 'experimental:arrival-sound'
-							},
-							{
-								label: appendState(i18n.experimental114514Sound, boolText(settingState.distance114514SoundEnabled)),
-								value: 'experimental:114514-sound'
-							},
-							{
-								label: appendState(i18n.experimentalIntervalSound, boolText(settingState.distanceIntervalSoundEnabled)),
-								value: 'experimental:interval-sound'
-							},
-							{
-								label: appendState(i18n.experimentalIntervalDistance, `${settingState.distanceIntervalSoundMeters}m`),
-								value: 'experimental:interval-distance'
-							},
 							{
 								label: appendState(i18n.experimentalCompassSmoothing, boolText(settingState.compassSmoothingEnabled)),
 								value: 'experimental:compass-smoothing'
@@ -1009,12 +1043,12 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 
 	const renderIntervalDistanceInput = (): React.JSX.Element => (
 		renderInputScreen({
-			title: i18n.experimentalIntervalDistance,
+			title: i18n.settingsIntervalDistance,
 			placeholder: '1000',
 			hint: 'meters',
 			details: [
-				{ label: i18n.experimentalIntervalDistance, value: `${settingState?.distanceIntervalSoundMeters ?? 0}m` },
-				{ label: i18n.experimentalIntervalSound, value: boolText(settingState?.distanceIntervalSoundEnabled ?? false) }
+				{ label: i18n.settingsIntervalDistance, value: `${settingState?.distanceIntervalSoundMeters ?? 0}m` },
+				{ label: i18n.settingsIntervalSound, value: boolText(settingState?.distanceIntervalSoundEnabled ?? false) }
 			],
 			onSubmit: (valueText) => {
 				const value = Number(valueText);
@@ -1023,11 +1057,11 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 						variant: 'error',
 						message: i18n.invalidNumber
 					});
-					setRoute({ kind: 'experimental' });
+					setRoute({ kind: 'settings' });
 					return;
 				}
 				runOperation(service.setDistanceIntervalSoundMeters(value), i18n.statusSaved);
-				setRoute({ kind: 'experimental' });
+				setRoute({ kind: 'settings' });
 			}
 		})
 	);
