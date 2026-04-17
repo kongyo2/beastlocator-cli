@@ -341,7 +341,7 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 			);
 		}
 
-		const arrowGlyph = getBeastTextArrowGlyph(navigation.arrowRotationDegrees);
+		const arrowGlyph = getBeastTextArrowGlyph(navigation.displayBearingDegrees);
 
 		return (
 			<Box flexDirection="column" alignItems="center">
