@@ -319,6 +319,7 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 			? `${i18n.directionLabel}: --`
 			: `${i18n.directionLabel}: ${navigation.displayDirectionText}`;
 		const imageWidth = isWideLayout ? 28 : 22;
+		const imageHeight = isWideLayout ? 14 : 11;
 
 		if (runtimeState.destinationAnswered) {
 			return (
@@ -336,11 +337,12 @@ export const App = ({ service }: AppProps): React.JSX.Element => {
 		return (
 			<Box flexDirection="column" alignItems="center">
 				{directionImageSrc ? (
-					<Image
-						alt={`${i18n.directionLabel}: ${navigation.displayDirectionText}`}
-						src={directionImageSrc}
-						width={imageWidth}
-					/>
+					<Box width={imageWidth} height={imageHeight}>
+						<Image
+							alt={`${i18n.directionLabel}: ${navigation.displayDirectionText}`}
+							src={directionImageSrc}
+						/>
+					</Box>
 				) : (
 					<Text color="gray">{i18n.waitingLocation}</Text>
 				)}
