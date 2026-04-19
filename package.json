@@ -1,6 +1,6 @@
 {
   "name": "@kongyo2/beastlocator-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Interactive BeastLocator CLI migrated from the Android app",
   "type": "module",
   "bin": {
