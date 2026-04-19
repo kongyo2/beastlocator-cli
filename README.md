@@ -2,6 +2,8 @@
 
 [`BeastLocator`](https://github.com/Link2011-Act2/BeastLocator) Androidアプリの仕様を、`TypeScript + React + Ink`で対話型CLIに移植した版です。
 
+![スクリーンショット](./docs/screenshot.jpg)
+
 ## 使い方
 
 ```bash

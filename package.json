@@ -1,6 +1,6 @@
 {
   "name": "@kongyo2/beastlocator-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Interactive BeastLocator CLI migrated from the Android app",
   "type": "module",
   "bin": {
@@ -15,6 +15,7 @@
   "main": "./dist/cli.js",
   "files": [
     "dist",
+    "docs",
     "README.md",
     "LICENSE"
   ],
@@ -53,7 +54,7 @@
     "provenance": true
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "dependencies": {
     "@inkjs/ui": "^2.0.0",
